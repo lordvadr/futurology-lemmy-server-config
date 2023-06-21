@@ -1,0 +1,6 @@
+.secret
+*.key
+*.swp
+*.swo
+*.bak
+*.old
