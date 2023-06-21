@@ -3,4 +3,5 @@
 dnf -y update
 dnf -y install \
 	tmux \
-	sendmail
+	sendmail \
+	podman
