@@ -20,12 +20,12 @@ last_signed_commit() {
 	local dir=0
 	[ -z "${2:-}" ] || [ ! -d "${2}" ] || { dir=1; pushd "${2}" > /dev/null 2>&1 || die "Could not change directory to \"${2}\"."; } 
 
-	[ -z "${1:-}" ] || git checkout "${1}" || die "Could not checkout branch \"${1}\"."
+	[ -z "${1:-}" ] || git checkout "${1}" >&2 || die "Could not checkout branch \"${1}\"."
 
 	COMMIT=""
 
 	for c in $(git log --pretty=format:"%H"); do
-		if git verify-commit "${c}"; then
+		if git verify-commit "${c}" >&2; then
 			COMMIT="${c}"
 			break
 		else
