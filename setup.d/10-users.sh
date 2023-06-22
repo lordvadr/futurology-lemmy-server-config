@@ -4,7 +4,7 @@ set -euo pipefail
 
 . "$(dirname "$(realpath "${0}")")/library.sh" || { >&2 echo "FATAL: Could not instantiate function library."; exit 1; }
 
-TMPDIR="$(mktemp -d /tmp/${0}.XXXXXXXX)" || die "Could not create temporary directory."
+TMPDIR="$(mktemp -d /tmp/$(basename "${0}").XXXXXXXX)" || die "Could not create temporary directory."
 
 git clone "https://github.com/lordvadr/futurology-ssh-keys.git" "${TMPDIR}" || die "Could not clone ssh users repository."
 
