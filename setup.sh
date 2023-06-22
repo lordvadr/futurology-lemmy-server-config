@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
+. "$(dirname "$(realpath "${0}")")/setup.d/library.sh" || { >&2 echo "FATAL: Could not instantiate function library."; exit 1; }
 
 cleanup() {
 	local rv="${?}"
@@ -10,8 +10,6 @@ cleanup() {
 		echo "Script failed to complete successfully."
 	fi
 }
-
-[ -z "${DEBUG+x}" ] || { echo "\"DEBUG\" environment variable is present. Enabling debugging output."; set -x; }
 
 trap cleanup EXIT
 
