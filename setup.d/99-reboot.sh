@@ -2,4 +2,4 @@
 
 . "$(dirname "$(realpath "${0}")")/library.sh" || { >&2 echo "FATAL: Could not instantiate function library."; exit 1; }
 
-reboot
+# reboot

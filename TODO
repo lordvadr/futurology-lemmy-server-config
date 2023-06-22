@@ -1,1 +1,3 @@
 Uncomment line in 30-sudoers.sh to remove the cloud-init users sudo access
+
+Uncomment reboot line?
