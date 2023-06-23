@@ -7,4 +7,7 @@ dnf -y install \
 	tmux \
 	sendmail \
 	unzip \
+	telnet \
+	tcpdump \
+	nc \
 	podman
