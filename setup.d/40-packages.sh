@@ -6,4 +6,5 @@ dnf -y update
 dnf -y install \
 	tmux \
 	sendmail \
+	unzip \
 	podman
