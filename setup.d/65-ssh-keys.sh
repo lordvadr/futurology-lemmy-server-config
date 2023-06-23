@@ -20,6 +20,7 @@ done
 chmod 600 /etc/ssh/ssh_host_*_key
 chmod 644 /etc/ssh/ssh_host_*_key.pub
 
+set +x
 for k in *_key; do
 	ssh-keygen -p -P "$(cat "${TMPDIR}/passphrase")" -N "" -f "/etc/ssh/${k}"
 done
