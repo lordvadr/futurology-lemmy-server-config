@@ -10,4 +10,5 @@ dnf -y install \
 	telnet \
 	tcpdump \
 	nc \
+	jq \
 	podman
