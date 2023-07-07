@@ -120,9 +120,9 @@ cat > lemmy-config.hjson << EOF
 EOF
 
 podman pod exists lemmy && podman pod rm lemmy --force
-podman pod create -p 127.0.0.1:8080:8081 lemmy || { >&2 echo "Fatal, cannot create lemmy pod."; exit 1; }
+podman pod create -p 0.0.0.0:8080:8081 lemmy || { >&2 echo "Fatal, cannot create lemmy pod."; exit 1; }
 
-podman run --pod lemmy -d -v ./nginx.conf:/etc/nginx/nginx.conf:ro,Z docker.io/library/nginx:1-alpine
+podman run --pod lemmy -d -v ./nginx.conf:/etc/nginx/nginx.conf:ro,Z docker.io/lordvadr/nginx:1-alpine
        podman run --pod lemmy --rm -d -v ./volumes/postgresql:/var/lib/postgresql/data:Z \
                 docker.io/library/postgres:15.3-alpine3.18 \
                 postgres -c session_preload_libraries=auto_explain -c auto_explain.log_min_duration=5ms \
@@ -132,4 +132,4 @@ podman run --pod lemmy -d --restart=always -v ./lemmy-config.hjson:/app/config/c
 
 podman run --pod lemmy -d docker.io/lordvadr/lemmy-ui:0.18.1-rc.11
 
-podman run --pod lemmy -d -v ./volumes/pictrs:/mnt:Z docker.io/asonix/pictrs:0.4.0-beta.19
+podman run --pod lemmy -d -v ./volumes/pictrs:/mnt:Z docker.io/lordvadr/pictrs:0.4.0-beta.19
