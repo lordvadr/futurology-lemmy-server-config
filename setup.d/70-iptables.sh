@@ -81,4 +81,10 @@ iptables -A INPUT -m tcp -p tcp --dport 25  -j ACCEPT
 # Nat rules
 iptables -t nat -A PREROUTING -m tcp -p tcp --dport 80  -j DNAT --to-destination :8080
 iptables -t nat -A PREROUTING -m tcp -p tcp --dport 443 -j DNAT --to-destination :8443
-iptables -t nat -A OUTPUT -d $(dig +short futurology.social)/32 -j DNAT --to-destination 127.0.0.1
+
+ip="$(dig +short futurology.social)"
+if [ -n "${ip}" ]; then
+				iptables -t nat -A OUTPUT -m tcp -p tcp --dport 80  -d "${ip}/32" -j DNAT --to-destination 127.0.0.1:8080
+				iptables -t nat -A OUTPUT -m tcp -p tcp --dport 443 -d "${ip}/32" -j DNAT --to-destination 127.0.0.1:8443
+				iptables -t nat -A OUTPUT -d "${ip}/32" -j DNAT --to-destination 127.0.0.1
+fi

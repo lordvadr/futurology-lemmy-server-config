@@ -58,4 +58,10 @@ ip6tables -A INPUT -m tcp -p tcp --dport 25  -j ACCEPT
 # Nat port bounces
 ip6tables -t nat -A PREROUTING -m tcp -p tcp --dport 80  -j DNAT --to-destination :8080
 ip6tables -t nat -A PREROUTING -m tcp -p tcp --dport 443 -j DNAT --to-destination :8443
-ip6tables -t nat -A OUTPUT -d $(dig -tAAAA +short futurology.social)/128 -j DNAT --to-destination ::1
+
+v6ip="$(dig -tAAAA +short futurology.social)" || true
+if [ -n "${v6ip}" ]; then
+				ip6tables -t nat -A OUTPUT -m tcp -p tcp --dport 80  -d "${v6ip}/128" -j DNAT --to-destination [::1]:8080
+				ip6tables -t nat -A OUTPUT -m tcp -p tcp --dport 443 -d "${v6ip}/128" -j DNAT --to-destination [::1]:8443
+				ip6tables -t nat -A OUTPUT -d "${v6ip}/128" -j DNAT --to-destination ::1
+fi
