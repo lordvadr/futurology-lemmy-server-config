@@ -17,3 +17,5 @@ commit="$(last_signed_commit)"
 git checkout "${commit}" || die "Could not checkout commit \"${commit}\"."
 
 ./install.sh
+
+useradd lemmyrun
