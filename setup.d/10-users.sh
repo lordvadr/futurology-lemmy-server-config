@@ -19,3 +19,4 @@ git checkout "${commit}" || die "Could not checkout commit \"${commit}\"."
 ./install.sh
 
 useradd lemmyrun
+loginctl enable-linger lemmyrun
