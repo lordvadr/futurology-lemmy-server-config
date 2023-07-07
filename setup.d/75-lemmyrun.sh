@@ -2,7 +2,7 @@
 
 . "$(dirname "$(realpath "${0}")")/library.sh" || { >&2 echo "FATAL: Could not instantiate function library."; exit 1; }
 
-[ "$(whoami)" == "root" ] && { cp "${0}" "$(dirname "$(realpath "${0}")")/library.sh" ~lemmyrun/ && exec su - lemmyrun -c "./${0}"; }
+[ "$(whoami)" == "root" ] && { cp "${0}" "$(dirname "$(realpath "${0}")")/library.sh" ~lemmyrun/ && exec su - lemmyrun -c "./$(basename "${0}")"; }
 
 mkdir -p ~/volumes/postgresql
 mkdir -p ~/volumes/pictrs
