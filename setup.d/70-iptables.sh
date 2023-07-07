@@ -56,6 +56,7 @@ iptables -A RL_REJECT -j DROP
 # SSH
 iptables -N SSH_IN
 iptables -A SSH_IN -m recent --rcheck --seconds 60 --name ssh_knock --mask 255.255.255.255 --rsource -j ACCEPT
+iptables -A SSH_IN -j ACCEPT
 iptables -A SSH_IN -j RL_REJECT
 
 # Everything that is related or established should be permmited. This is for performance reasons
