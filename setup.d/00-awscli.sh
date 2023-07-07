@@ -2,6 +2,8 @@
 
 . "$(dirname "$(realpath "${0}")")/library.sh" || { >&2 echo "FATAL: Could not instantiate function library."; exit 1; }
 
+dnf -y install unzip
+
 TMPDIR="$(mktemp -d "/tmp/$(basename "${0:-awscli}").XXXXXXXXXX")" || die "Could not create temporary directory."
 
 pushd "${TMPDIR}" > /dev/null 2>&1 || die "Could not change directory to temporary directory \"${TMPDIR}\"."

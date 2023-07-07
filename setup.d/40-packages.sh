@@ -6,7 +6,6 @@ dnf -y update
 dnf -y install \
 	tmux \
 	sendmail \
-	unzip \
 	telnet \
 	tcpdump \
 	nc \
