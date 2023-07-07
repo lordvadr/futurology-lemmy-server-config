@@ -2,7 +2,13 @@
 
 . "$(dirname "$(realpath "${0}")")/library.sh" || { >&2 echo "FATAL: Could not instantiate function library."; exit 1; }
 
-[ "$(whoami)" == "root" ] && { cp "${0}" ~lemmy/ && chmown lemmy.lemmy ~lemmy/"${0}" && su - lemmyrun -c "./${o}"; }
+[ "$(whoami)" == "root" ] && { cp "${0}" "$(dirname "$(realpath "${0}")")/library.sh" ~lemmyrun/ && exec su - lemmyrun -c "./${0}"; }
+
+mkdir -p ~/volumes/postgresql
+mkdir -p ~/volumes/pictrs
+
+chmod 777 ~/volumes/postgresql || true
+chmod 777 ~/volumes/pictrs
 
 # Pictrs
 export PICTRS_OPENTELEMETRY_URL=http://otel:4137
@@ -33,7 +39,7 @@ export LEMMY_HTTPS=false
 export LEMMY_UI_DEBUG=true
 
 cat > nginx.conf << EOF
-orker_processes 1;
+worker_processes 1;
 events {
     worker_connections 1024;
 }
@@ -122,7 +128,7 @@ podman run --pod lemmy -d -v ./nginx.conf:/etc/nginx/nginx.conf:ro,Z docker.io/l
                 postgres -c session_preload_libraries=auto_explain -c auto_explain.log_min_duration=5ms \
                 -c auto_explain.log_analyze=true -c track_activity_query_size=1048576
 
-podman run --pod lemmy -d --restart=always -v ./lemmy-config.hjson:/app/config/config.hjson:ro,Z localhost/lemmy:0.18.0-rc.6
+podman run --pod lemmy -d --restart=always -v ./lemmy-config.hjson:/app/config/config.hjson:ro,Z docker.io/lordvadr/lemmy:0.18.0-rc.6
 
 podman run --pod lemmy -d docker.io/lordvadr/lemmy-ui:0.18.1-rc.11
 
