@@ -2,6 +2,8 @@
 
 . "$(dirname "$(realpath "${0}")")/library.sh" || { >&2 echo "FATAL: Could not instantiate function library."; exit 1; }
 
+dnf -y install jq
+
 path="$(dirname "$(realpath "${0}")")" || die "Could not determine my directory."
 
 [ -d "${path}/../crypto" ] || die "No crypto directory can be found."
