@@ -2,7 +2,7 @@
 
 . "$(dirname "$(realpath "${0}")")/library.sh" || { >&2 echo "FATAL: Could not instantiate function library."; exit 1; }
 
-[ "$(whoami)" == "root" ] && { cp "${0}" ~lemmy/ && chmown lemmy.lemmy ~lemmy/"${0}" && su - lemmyrun -c "./${o}" }
+[ "$(whoami)" == "root" ] && { cp "${0}" ~lemmy/ && chmown lemmy.lemmy ~lemmy/"${0}" && su - lemmyrun -c "./${o}"; }
 
 # Pictrs
 export PICTRS_OPENTELEMETRY_URL=http://otel:4137
