@@ -10,33 +10,35 @@ mkdir -p ~/volumes/pictrs
 chmod 777 ~/volumes/postgresql || true
 chmod 777 ~/volumes/pictrs
 
+cat > environ << EOF
 # Pictrs
-export PICTRS_OPENTELEMETRY_URL=http://otel:4137
-export PICTRS__API_KEY=API_KEY
-export RUST_LOG=debug
-export RUST_BACKTRACE=full
-export PICTRS__MEDIA__VIDEO_CODEC=vp9
-export PICTRS__MEDIA__GIF__MAX_WIDTH=256
-export PICTRS__MEDIA__GIF__MAX_HEIGHT=256
-export PICTRS__MEDIA__GIF__MAX_AREA=65536
-export PICTRS__MEDIA__GIF__MAX_FRAME_COUNT=400
+PICTRS_OPENTELEMETRY_URL=http://otel:4137
+PICTRS__API_KEY=API_KEY
+RUST_LOG=debug
+RUST_BACKTRACE=full
+PICTRS__MEDIA__VIDEO_CODEC=vp9
+PICTRS__MEDIA__GIF__MAX_WIDTH=256
+PICTRS__MEDIA__GIF__MAX_HEIGHT=256
+PICTRS__MEDIA__GIF__MAX_AREA=65536
+PICTRS__MEDIA__GIF__MAX_FRAME_COUNT=400
 
 # Postgres
-export POSTGRES_USER=lemmy
-export POSTGRES_PASSWORD=lemmy
-export POSTGRES_DB=lemmy
+POSTGRES_USER=lemmy
+POSTGRES_PASSWORD=lemmy
+POSTGRES_DB=lemmy
 
 # Lemmy
-export LEMMY_CONFIG_LOCATION=/app/config/config.hjson
-export LEMMY_DATABASE_URL=postgres://lemmy:lemmy@localhost:5432/lemmy
+LEMMY_CONFIG_LOCATION=/app/config/config.hjson
+LEMMY_DATABASE_URL=postgres://lemmy:lemmy@localhost:5432/lemmy
 
 # Lemmy UI
 # this needs to match the hostname defined in the lemmy service
-export LEMMY_UI_LEMMY_INTERNAL_HOST=lemmy:8536
+LEMMY_UI_LEMMY_INTERNAL_HOST=lemmy:8536
 # set the outside hostname here
-export LEMMY_UI_LEMMY_EXTERNAL_HOST=localhost:1236
-export LEMMY_HTTPS=false
-export LEMMY_UI_DEBUG=true
+LEMMY_UI_LEMMY_EXTERNAL_HOST=localhost:1236
+LEMMY_HTTPS=false
+LEMMY_UI_DEBUG=true
+EOF
 
 cat > nginx.conf << EOF
 worker_processes 1;
@@ -122,14 +124,14 @@ EOF
 podman pod exists lemmy && podman pod rm lemmy --force
 podman pod create -p 0.0.0.0:8080:8081 lemmy || { >&2 echo "Fatal, cannot create lemmy pod."; exit 1; }
 
-podman run --pod lemmy -d -v ./nginx.conf:/etc/nginx/nginx.conf:ro,Z docker.io/lordvadr/nginx:1-alpine
-       podman run --pod lemmy --rm -d -v ./volumes/postgresql:/var/lib/postgresql/data:Z \
+podman run --env-file=./environ --pod lemmy -d -v ./nginx.conf:/etc/nginx/nginx.conf:ro,Z docker.io/lordvadr/nginx:1-alpine
+       podman run --env-file=./environ --pod lemmy --rm -d -v ./volumes/postgresql:/var/lib/postgresql/data:Z \
                 docker.io/library/postgres:15.3-alpine3.18 \
                 postgres -c session_preload_libraries=auto_explain -c auto_explain.log_min_duration=5ms \
                 -c auto_explain.log_analyze=true -c track_activity_query_size=1048576
 
-podman run --pod lemmy -d --restart=always -v ./lemmy-config.hjson:/app/config/config.hjson:ro,Z docker.io/lordvadr/lemmy:0.18.0-rc.6
+podman run --env-file=./environ --pod lemmy -d --restart=always -v ./lemmy-config.hjson:/app/config/config.hjson:ro,Z docker.io/lordvadr/lemmy:0.18.0-rc.6
 
-podman run --pod lemmy -d docker.io/lordvadr/lemmy-ui:0.18.1-rc.11
+podman run --env-file=./environ --pod lemmy -d docker.io/lordvadr/lemmy-ui:0.18.1-rc.11
 
-podman run --pod lemmy -d -v ./volumes/pictrs:/mnt:Z docker.io/lordvadr/pictrs:0.4.0-beta.19
+podman run --env-file=./environ --pod lemmy -d -v ./volumes/pictrs:/mnt:Z docker.io/lordvadr/pictrs:0.4.0-beta.19
