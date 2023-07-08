@@ -10,4 +10,5 @@ dnf -y install \
 	tcpdump \
 	nc \
 	bind-utils \
+	wget \
 	podman
