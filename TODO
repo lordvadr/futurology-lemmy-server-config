@@ -1,1 +1,9 @@
+TLS
+	certbot->
+		epel
+			subscription-manager?
+Persistent storage
+	EFS?
+CICD
 Uncomment reboot line?
+
